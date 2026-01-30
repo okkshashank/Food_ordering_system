@@ -1,0 +1,268 @@
+/* ===============================
+GLOBAL STYLES
+=============================== */
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background:#fafafa;
+    overflow-x:hidden;
+    color:#222;
+}
+
+a{
+    text-decoration:none;
+}
+
+
+/* ===============================
+NAVBAR (Freshmenu Style)
+=============================== */
+
+.navbar{
+    background:white !important;
+    box-shadow:0 2px 12px rgba(0,0,0,0.05);
+    padding:18px 0;
+}
+
+.navbar-brand{
+    font-weight:700;
+    font-size:26px;
+    color:#ff6b35 !important;
+}
+
+.nav-link{
+    color:#333 !important;
+    font-weight:500;
+    margin-right:18px;
+}
+
+.nav-link:hover{
+    color:#ff6b35 !important;
+}
+
+
+/* ===============================
+HERO SECTION
+=============================== */
+
+.hero{
+    min-height:90vh;
+    display:flex;
+    align-items:center;
+}
+
+.hero h1{
+    font-size:56px;
+    font-weight:700;
+    line-height:1.2;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+
+/* ===============================
+SECTION SPACING
+=============================== */
+
+.section{
+    padding:80px 0;
+}
+
+
+/* ===============================
+BUTTONS
+=============================== */
+
+.btn-orange{
+    background:#ff6b35;
+    color:white;
+    border:none;
+    padding:12px 28px;
+    border-radius:12px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.btn-orange:hover{
+    background:#ff5722;
+    color:white;
+    transform:translateY(-2px);
+}
+
+.btn-outline-dark{
+    border-radius:10px;
+}
+
+
+/* ===============================
+CARDS (Food Style)
+=============================== */
+
+.card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    transition:.35s;
+    background:white;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 18px 40px rgba(0,0,0,0.08);
+}
+
+.card img{
+    border-radius:14px;
+}
+
+
+/* ===============================
+CATEGORY CARDS
+=============================== */
+
+.category-card{
+    padding:18px;
+    border-radius:18px;
+    background:white;
+}
+
+.category-card img{
+    border-radius:14px;
+}
+
+
+/* ===============================
+MENU FOOD CARDS
+=============================== */
+
+.food-card img{
+    height:200px;
+    object-fit:cover;
+}
+
+.food-title{
+    font-weight:600;
+    font-size:20px;
+}
+
+.food-price{
+    color:#ff6b35;
+    font-weight:600;
+}
+
+
+/* ===============================
+BADGES
+=============================== */
+
+.badge-fresh{
+    background:#2ecc71;
+}
+
+.badge-best{
+    background:#ff6b35;
+}
+
+
+/* ===============================
+FORMS
+=============================== */
+
+.form-control{
+    border-radius:10px;
+    padding:10px;
+}
+
+.form-control:focus{
+    box-shadow:none;
+    border-color:#ff6b35;
+}
+
+
+/* ===============================
+TABLES (Admin Panel)
+=============================== */
+
+.table{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.table thead{
+    background:#ff6b35;
+    color:white;
+}
+
+
+/* ===============================
+ALERTS
+=============================== */
+
+.alert{
+    border-radius:12px;
+}
+
+
+/* ===============================
+DASHBOARD CARDS
+=============================== */
+
+.dashboard-card{
+    padding:28px;
+    border-radius:18px;
+    background:white;
+    transition:.3s;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-8px);
+}
+
+
+/* ===============================
+FOOTER
+=============================== */
+
+footer{
+    margin-top:60px;
+}
+
+
+/* ===============================
+LOGIN PAGE
+=============================== */
+
+.login-card{
+    border:none;
+    border-radius:18px;
+}
+
+
+/* ===============================
+ADMIN BADGES (Order Status)
+=============================== */
+
+.status-preparing{
+    background:#ffc107;
+    color:black;
+}
+
+.status-out{
+    background:#0d6efd;
+}
+
+.status-delivered{
+    background:#198754;
+}
+
+
+/* ===============================
+SMOOTH SCROLL
+=============================== */
+
+html{
+    scroll-behavior:smooth;
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Menu</title>
+
+</head>
+
+<body>
+
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar navbar-expand-lg shadow-sm bg-white">
+<div class="container">
+
+<a class="navbar-brand fw-bold">Foodie 🍔</a>
+
+<div>
+<a href="/" class="nav-link d-inline">Home</a>
+<a href="/dashboard" class="nav-link d-inline">Dashboard</a>
+<a href="/orders" class="nav-link d-inline">My Orders</a>
+<a href="/logout" class="btn btn-orange">Logout</a>
+</div>
+
+</div>
+</nav>
+
+
+
+<!-- ✅ PAGE HEADER -->
+<div class="container section">
+
+<h2 class="fw-bold mb-2">
+Explore Our Menu 🍽️
+</h2>
+
+<p class="text-muted mb-4">
+Freshly prepared meals crafted with premium ingredients.
+</p>
+
+</div>
+
+
+
+<!-- ✅ CATEGORY BAR -->
+<div class="container mb-5">
+
+<div class="d-flex gap-3 flex-wrap">
+
+<button class="btn btn-outline-dark">All</button>
+<button class="btn btn-outline-dark">Pizza</button>
+<button class="btn btn-outline-dark">Burgers</button>
+<button class="btn btn-outline-dark">Healthy</button>
+<button class="btn btn-outline-dark">Desserts</button>
+
+</div>
+
+</div>
+
+
+
+<!-- ✅ FLASH MESSAGE -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="container mb-4">
+      <div class="alert alert-success text-center">
+        {{ messages[0] }}
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+
+<!-- ⭐ FOOD GRID -->
+<div class="container section">
+
+{% if items %}
+
+<div class="row">
+
+{% for item in items %}
+
+<div class="col-md-4 mb-4">
+
+<div class="card food-card p-3 h-100 shadow-sm border-0">
+
+<!-- ✅ DATABASE IMAGE -->
+<img src="{{ url_for('static', filename='images/' + item[3]) }}"
+     class="img-fluid mb-3"
+     style="height:220px; width:100%; object-fit:cover; border-radius:12px;">
+
+
+<!-- Badge -->
+<span class="badge badge-best mb-2">
+🔥 Best Seller
+</span>
+
+<h5 class="food-title fw-bold">
+{{item[1]}}
+</h5>
+
+<!-- Rating -->
+<p class="mb-1 text-warning">
+★★★★★
+</p>
+
+<p class="text-muted small">
+Prepared fresh by our chefs for an unforgettable taste experience.
+</p>
+
+<h4 class="food-price mb-3">
+₹{{item[2]}}
+</h4>
+
+<form method="POST" action="/order">
+
+<input type="hidden" name="item" value="{{item[1]}}">
+
+<input class="form-control mb-2"
+type="number"
+name="qty"
+min="1"
+placeholder="Quantity"
+required>
+
+<button class="btn btn-orange w-100">
+Add to Order
+</button>
+
+</form>
+
+</div>
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<!-- ⭐ EMPTY STATE -->
+<div class="text-center mt-5">
+
+<h4>No food available yet 🍽️</h4>
+
+<p class="text-muted">
+Admin will add delicious items soon!
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+
+
+<!-- ✅ FOOTER -->
+<footer style="background:#111; color:white;" class="p-4 text-center">
+
+Fresh meals. Fast delivery.  
+Food Ordering System © 2026
+
+</footer>
+
+
+</body>
+</html>

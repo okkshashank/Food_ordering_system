@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Food Ordering System</title>
+</head>
+
+
+<body style="font-family: 'Poppins', sans-serif;">
+
+
+<!-- 🔥 SMART NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow"
+     style="background: linear-gradient(90deg,#6366f1,#8b5cf6);">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold">🍔 TakeAway</a>
+
+<div>
+
+<a href="{{ url_for('home') }}" class="btn btn-light me-2">Home</a>
+<a href="{{ url_for('menu') }}" class="btn btn-light me-2">Menu</a>
+
+{% if session.get('user') %}
+
+<a href="{{ url_for('dashboard') }}" class="btn btn-success me-2">
+Dashboard
+</a>
+
+<a href="{{ url_for('logout') }}" class="btn btn-danger">
+Logout
+</a>
+
+{% else %}
+
+<a href="{{ url_for('login') }}" class="btn btn-warning">
+Login
+</a>
+
+{% endif %}
+
+</div>
+</div>
+</nav>
+
+
+
+<!-- 🔥 HERO SECTION -->
+<div style="
+height:90vh;
+background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836');
+background-size:cover;
+background-position:center;
+position:relative;
+">
+
+<div style="
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,0.55);
+"></div>
+
+<div class="container h-100 d-flex align-items-center">
+
+<div style="position:relative; color:white; max-width:600px;">
+
+<h1 class="display-3 fw-bold">
+Delicious Food,<br> Delivered Fast 
+</h1>
+
+<p class="lead">
+Order from your favorite restaurants with just a few clicks.
+</p>
+
+<a href="{{ url_for('menu') }}" class="btn btn-warning btn-lg mt-3">
+Order Now
+</a>
+
+</div>
+</div>
+</div>
+
+
+
+<!-- 🔥 FOOD CATEGORY CARDS -->
+<div class="container mt-5">
+
+<h2 class="text-center fw-bold mb-4">
+Explore Our Menu
+</h2>
+
+<div class="row">
+
+<div class="col-md-3">
+<div class="card shadow border-0">
+<img src="{{ url_for('static', filename='images/pizza.jpg') }}" class="card-img-top">
+<div class="card-body text-center">
+<h5>Pizza</h5>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card shadow border-0">
+<img src="{{ url_for('static', filename='images/burger.jpg') }}" class="card-img-top">
+<div class="card-body text-center">
+<h5>Burgers</h5>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card shadow border-0">
+<img src="{{ url_for('static', filename='images/cake.jpg') }}" class="card-img-top">
+<div class="card-body text-center">
+<h5>Desserts</h5>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card shadow border-0">
+<img src="{{ url_for('static', filename='images/sandwich.jpg') }}" class="card-img-top">
+<div class="card-body text-center">
+<h5>Sandwich</h5>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+
+
+<!-- 🔥 ABOUT SECTION -->
+<div class="container mt-5 mb-5">
+
+<div class="row align-items-center">
+
+<div class="col-md-6">
+<img src="https://source.unsplash.com/500x400/?chef"
+     class="img-fluid rounded shadow">
+</div>
+
+<div class="col-md-6">
+
+<h2 class="fw-bold">
+Why Choose Us?
+</h2>
+
+<p class="text-muted">
+We deliver fresh, hygienic and delicious meals straight to your doorstep.
+Our system ensures fast ordering, real-time updates, and a seamless experience.
+</p>
+
+<a href="{{ url_for('menu') }}" class="btn btn-primary">
+Explore Menu
+</a>
+
+</div>
+</div>
+</div>
+
+
+
+<!-- 🔥 FOOTER -->
+<footer style="background:#111; color:white;" class="p-4 text-center">
+
+Food Ordering System © 2026  
+Built for Seamless Online Ordering
+
+</footer>
+
+</body>
+</html>
