@@ -21,7 +21,7 @@ def create_tables():
     conn = get_db()
     cur = conn.cursor()
 
-    # ================= USERS =================
+    # USERS
     cur.execute("""
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,19 +31,17 @@ def create_tables():
     )
     """)
 
-    # ⭐ AUTO ADMIN
     cur.execute("""
     INSERT OR IGNORE INTO users(id,username,password,role)
     VALUES (1,'admin','admin123','admin')
     """)
 
-    # ⭐ AUTO NORMAL USER (NEW)
     cur.execute("""
     INSERT OR IGNORE INTO users(id,username,password,role)
     VALUES (2,'user','123','user')
     """)
 
-    # ================= MENU =================
+    # MENU
     cur.execute("""
     CREATE TABLE IF NOT EXISTS menu(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,7 +51,6 @@ def create_tables():
     )
     """)
 
-    # ⭐ AUTO FOOD INSERT WITH IMAGES
     cur.execute("""
     INSERT OR IGNORE INTO menu(id,item,price,image)
     VALUES
@@ -64,13 +61,16 @@ def create_tables():
     (5,'Sandwich',90,'sandwich.jpg')
     """)
 
-    # ================= ORDERS =================
+    # ORDERS (🔥 FIXED)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS orders(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT,
         item TEXT,
         qty INTEGER,
+        address TEXT,
+        payment_mode TEXT,
+        payment_status TEXT,
         status TEXT DEFAULT 'Preparing'
     )
     """)
@@ -99,34 +99,29 @@ def home():
 def login():
 
     if request.method == "POST":
-
         username = request.form["username"]
         password = request.form["password"]
 
         conn = get_db()
         cur = conn.cursor()
-
         cur.execute(
             "SELECT * FROM users WHERE username=? AND password=?",
             (username, password)
         )
-
         user = cur.fetchone()
         conn.close()
 
         if user:
             session["user"] = username
             session["role"] = user[3]
+            session["cart"] = []
 
-            # ADMIN → Admin Panel
             if user[3] == "admin":
                 return redirect("/admin")
 
-            # USER → Dashboard
             return redirect("/dashboard")
 
-        else:
-            flash("Invalid Username or Password!")
+        flash("Invalid Username or Password!")
 
     return render_template("login.html")
 
@@ -137,10 +132,8 @@ def login():
 
 @app.route("/dashboard")
 def dashboard():
-
     if "user" not in session:
         return redirect("/login")
-
     return render_template("dashboard.html")
 
 
@@ -150,48 +143,151 @@ def dashboard():
 
 @app.route("/menu")
 def menu():
-
     if "user" not in session:
         return redirect("/login")
 
     conn = get_db()
     cur = conn.cursor()
-
     cur.execute("SELECT * FROM menu")
     items = cur.fetchall()
-
     conn.close()
 
     return render_template("menu.html", items=items)
 
 
 # ===============================
-# PLACE ORDER
+# ADD TO CART
 # ===============================
 
-@app.route("/order", methods=["POST"])
-def order():
+@app.route("/add_to_cart", methods=["POST"])
+def add_to_cart():
 
     if "user" not in session:
         return redirect("/login")
 
     item = request.form["item"]
-    qty = request.form["qty"]
+    price = int(request.form["price"])
+    qty = int(request.form["qty"])
+
+    cart = session.get("cart", [])
+
+    for c in cart:
+        if c["item"] == item:
+            c["qty"] += qty
+            session["cart"] = cart
+            flash("🛒 Quantity updated!")
+            return redirect("/menu")
+
+    cart.append({
+        "item": item,
+        "price": price,
+        "qty": qty
+    })
+
+    session["cart"] = cart
+    flash("🛒 Added to cart!")
+    return redirect("/menu")
+
+
+# ===============================
+# CART PAGE
+# ===============================
+
+@app.route("/cart")
+def cart():
+    if "user" not in session:
+        return redirect("/login")
+
+    cart = session.get("cart", [])
+    total = sum(i["price"] * i["qty"] for i in cart)
+    return render_template("cart.html", cart=cart, total=total)
+
+
+# ===============================
+# CHECKOUT (STEP 1)
+# ===============================
+
+@app.route("/checkout", methods=["GET", "POST"])
+def checkout():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    cart = session.get("cart", [])
+
+    if not cart:
+        flash("Your cart is empty!")
+        return redirect("/menu")
+
+    if request.method == "POST":
+        session["address"] = request.form["address"]
+        session["payment_mode"] = request.form["payment"]
+
+        if session["payment_mode"] == "COD":
+            return redirect("/place_order")
+
+        return redirect("/payment")
+
+    total = sum(i["price"] * i["qty"] for i in cart)
+    return render_template("checkout.html", cart=cart, total=total)
+
+
+# ===============================
+# PAYMENT PAGE (STEP 2)
+# ===============================
+
+@app.route("/payment", methods=["GET", "POST"])
+def payment():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        return redirect("/place_order")
+
+    total = sum(i["price"] * i["qty"] for i in session["cart"])
+    return render_template("payment.html", total=total)
+
+
+# ===============================
+# PLACE ORDER (STEP 3)
+# ===============================
+
+@app.route("/place_order")
+def place_order():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    cart = session["cart"]
+    address = session["address"]
+    payment_mode = session["payment_mode"]
+
+    payment_status = "Pending" if payment_mode == "COD" else "Paid"
 
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("""
-        INSERT INTO orders(username,item,qty,status)
-        VALUES(?,?,?,?)
-    """, (session["user"], item, qty, "Preparing"))
+    for item in cart:
+        cur.execute("""
+            INSERT INTO orders(username,item,qty,address,payment_mode,payment_status,status)
+            VALUES(?,?,?,?,?,?,?)
+        """, (
+            session["user"],
+            item["item"],
+            item["qty"],
+            address,
+            payment_mode,
+            payment_status,
+            "Preparing"
+        ))
 
     conn.commit()
     conn.close()
 
-    flash("✅ Order placed successfully!")
-
-    return redirect("/menu")
+    session["cart"] = []
+    flash("🎉 Order placed successfully!")
+    return redirect("/orders")
 
 
 # ===============================
@@ -200,24 +296,19 @@ def order():
 
 @app.route("/orders")
 def orders():
-
     if "user" not in session:
         return redirect("/login")
 
     conn = get_db()
     cur = conn.cursor()
-
-    cur.execute("""
-        SELECT * FROM orders
-        WHERE username=?
-        ORDER BY id DESC
-    """, (session["user"],))
-
-    user_orders = cur.fetchall()
-
+    cur.execute(
+        "SELECT * FROM orders WHERE username=? ORDER BY id DESC",
+        (session["user"],)
+    )
+    data = cur.fetchall()
     conn.close()
 
-    return render_template("orders.html", orders=user_orders)
+    return render_template("orders.html", orders=data)
 
 
 # ===============================
@@ -236,7 +327,6 @@ def admin():
     cur.execute("SELECT * FROM orders ORDER BY id DESC")
     orders = cur.fetchall()
 
-    # Stats
     cur.execute("SELECT COUNT(*) FROM orders")
     total_orders = cur.fetchone()[0]
 
@@ -262,7 +352,7 @@ def admin():
 
 
 # ===============================
-# UPDATE ORDER STATUS
+# UPDATE STATUS (ADMIN)
 # ===============================
 
 @app.route("/update_status", methods=["POST"])
@@ -276,12 +366,7 @@ def update_status():
 
     conn = get_db()
     cur = conn.cursor()
-
-    cur.execute(
-        "UPDATE orders SET status=? WHERE id=?",
-        (status, order_id)
-    )
-
+    cur.execute("UPDATE orders SET status=? WHERE id=?", (status, order_id))
     conn.commit()
     conn.close()
 
@@ -299,7 +384,7 @@ def logout():
 
 
 # ===============================
-# RUN APP
+# RUN
 # ===============================
 
 if __name__ == "__main__":

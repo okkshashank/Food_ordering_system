@@ -3,36 +3,33 @@
 <head>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <title>Admin Dashboard</title>
 
 </head>
 
-<body>
+<body style="font-family:'Poppins', sans-serif; background:#fafafa;">
 
 
 <!-- ✅ NAVBAR -->
-<nav class="navbar navbar-expand-lg">
-<div class="container">
+<nav class="navbar navbar-expand-lg shadow-sm bg-white">
+  <div class="container">
 
-<a class="navbar-brand">Admin Panel ⚙️</a>
+    <a class="navbar-brand fw-bold">Admin Panel ⚙️</a>
 
-<div>
-<a href="/" class="nav-link d-inline">Home</a>
-<a href="/logout" class="btn btn-orange">Logout</a>
-</div>
+    <div>
+      <a href="/" class="nav-link d-inline">Home</a>
+      <a href="/logout" class="btn btn-orange ms-2">Logout</a>
+    </div>
 
-</div>
+  </div>
 </nav>
 
 
-
 <!-- ⭐ PAGE HEADER -->
-<div class="container section">
+<div class="container section mt-4">
 
 <h2 class="fw-bold mb-4">
 System Overview 📊
@@ -43,50 +40,37 @@ System Overview 📊
 <!-- Total Orders -->
 <div class="col-md-3 mb-4">
 <div class="dashboard-card text-center">
-
-<h3>{{total_orders}}</h3>
+<h3>{{ total_orders }}</h3>
 <p class="text-muted">Total Orders</p>
-
 </div>
 </div>
-
 
 <!-- Users -->
 <div class="col-md-3 mb-4">
 <div class="dashboard-card text-center">
-
-<h3>{{total_users}}</h3>
+<h3>{{ total_users }}</h3>
 <p class="text-muted">Users</p>
-
 </div>
 </div>
-
 
 <!-- Preparing -->
 <div class="col-md-3 mb-4">
 <div class="dashboard-card text-center">
-
-<h3>{{preparing}}</h3>
+<h3>{{ preparing }}</h3>
 <p class="text-muted">Preparing</p>
-
 </div>
 </div>
-
 
 <!-- Delivered -->
 <div class="col-md-3 mb-4">
 <div class="dashboard-card text-center">
-
-<h3>{{delivered}}</h3>
+<h3>{{ delivered }}</h3>
 <p class="text-muted">Delivered</p>
-
 </div>
 </div>
 
 </div>
-
 </div>
-
 
 
 <!-- ⭐ ORDERS TABLE -->
@@ -96,11 +80,10 @@ System Overview 📊
 Manage Orders
 </h3>
 
-<div class="card p-4">
+<div class="card p-4 shadow-sm">
 
-<table class="table">
-
-<thead>
+<table class="table align-middle">
+<thead class="table-light">
 <tr>
 <th>ID</th>
 <th>User</th>
@@ -117,51 +100,54 @@ Manage Orders
 
 <tr>
 
-<td>#{{order[0]}}</td>
-<td>{{order[1]}}</td>
-<td>{{order[2]}}</td>
-<td>{{order[3]}}</td>
+<td>#{{ order[0] }}</td>
+<td>{{ order[1] }}</td>
+<td>{{ order[2] }}</td>
+<td>{{ order[3] }}</td>
 
+<!-- ✅ STATUS (FIXED INDEX) -->
 <td>
+{% if order[5] == "Preparing" %}
+  <span class="badge bg-warning text-dark">Preparing</span>
 
-{% if order[4] == "Preparing" %}
-<span class="badge status-preparing">
-Preparing
-</span>
+{% elif order[5] == "Out for Delivery" %}
+  <span class="badge bg-info">Out for Delivery</span>
 
-{% elif order[4] == "Out for Delivery" %}
-<span class="badge status-out">
-Out for Delivery
-</span>
-
-{% else %}
-<span class="badge status-delivered">
-Delivered
-</span>
+{% elif order[5] == "Delivered" %}
+  <span class="badge bg-success">Delivered</span>
 {% endif %}
-
 </td>
 
+<!-- ✅ UPDATE FORM -->
 <td>
-
 <form method="POST" action="/update_status">
 
-<input type="hidden" name="order_id" value="{{order[0]}}">
+<input type="hidden" name="order_id" value="{{ order[0] }}">
 
-<select name="status" class="form-control mb-2">
+<select name="status" class="form-select mb-2">
 
-<option>Preparing</option>
-<option>Out for Delivery</option>
-<option>Delivered</option>
+<option value="Preparing"
+{% if order[5] == "Preparing" %}selected{% endif %}>
+Preparing
+</option>
+
+<option value="Out for Delivery"
+{% if order[5] == "Out for Delivery" %}selected{% endif %}>
+Out for Delivery
+</option>
+
+<option value="Delivered"
+{% if order[5] == "Delivered" %}selected{% endif %}>
+Delivered
+</option>
 
 </select>
 
-<button class="btn btn-orange btn-sm">
+<button class="btn btn-orange btn-sm w-100">
 Update
 </button>
 
 </form>
-
 </td>
 
 </tr>
@@ -172,19 +158,16 @@ Update
 </table>
 
 </div>
-
 </div>
 
 
-
 <!-- ⭐ FOOTER -->
-<footer style="background:#111; color:white;" class="p-4 text-center">
+<footer style="background:#111; color:white;" class="p-4 text-center mt-5">
 
 Admin Control Center ⚙️  
 Food Ordering System © 2026
 
 </footer>
-
 
 </body>
 </html>

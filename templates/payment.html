@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<title>Payment</title>
+
+<style>
+body{
+    font-family:'Poppins', sans-serif;
+    background:#f9fafb;
+}
+
+.payment-box{
+    max-width:420px;
+    margin:auto;
+    margin-top:80px;
+}
+
+.fake-card{
+    background:linear-gradient(135deg,#f97316,#fb923c);
+    color:white;
+    border-radius:16px;
+    padding:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="payment-box">
+
+<div class="card shadow border-0">
+<div class="card-body text-center">
+
+<h3 class="fw-bold mb-3">
+Payment Gateway 💳
+</h3>
+
+<p class="text-muted mb-4">
+This is a demo payment page. No real money involved.
+</p>
+
+<!-- FAKE CARD -->
+<div class="fake-card mb-4 text-start">
+<p class="mb-1">CARD HOLDER</p>
+<h6>Demo User</h6>
+
+<p class="mb-1 mt-3">CARD NUMBER</p>
+<h6>**** **** **** 1234</h6>
+
+<div class="d-flex justify-content-between mt-3">
+<span>VALID: 12/28</span>
+<span>CVV: ***</span>
+</div>
+</div>
+
+<h5 class="fw-bold mb-3">
+Total Amount: ₹{{ total }}
+</h5>
+
+<form method="POST">
+<button class="btn btn-success btn-lg w-100">
+Pay Now
+</button>
+</form>
+
+<a href="/checkout" class="d-block mt-3 text-muted">
+← Go back to checkout
+</a>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

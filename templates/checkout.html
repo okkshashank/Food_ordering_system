@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Checkout</title>
+
+</head>
+
+<body style="font-family:'Poppins', sans-serif; background:#fafafa;">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg shadow-sm bg-white">
+  <div class="container">
+    <a class="navbar-brand fw-bold">Foodie 🍔</a>
+    <div>
+      <a href="/menu" class="nav-link d-inline">Menu</a>
+      <a href="/cart" class="nav-link d-inline">Cart</a>
+      <a href="/logout" class="btn btn-orange">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+
+<h2 class="fw-bold mb-4">Checkout 🧾</h2>
+
+<!-- ORDER SUMMARY -->
+<div class="card mb-4 shadow-sm">
+<div class="card-body">
+
+<h5 class="fw-bold mb-3">Order Summary</h5>
+
+{% for item in cart %}
+<p class="mb-1">
+{{ item.item }} × {{ item.qty }}
+<span class="float-end">
+₹{{ item.price * item.qty }}
+</span>
+</p>
+{% endfor %}
+
+<hr>
+
+<h5 class="fw-bold">
+Total
+<span class="float-end">₹{{ total }}</span>
+</h5>
+
+</div>
+</div>
+
+<!-- ADDRESS + PAYMENT -->
+<div class="card shadow-sm">
+<div class="card-body">
+
+<h5 class="fw-bold mb-3">Delivery Address 📍</h5>
+
+<form method="POST">
+
+<textarea name="address"
+class="form-control mb-4"
+rows="4"
+placeholder="Enter your full delivery address"
+required></textarea>
+
+<!-- 🔥 PAYMENT OPTIONS (STEP 4) -->
+<h5 class="fw-bold mb-3">Payment Method 💳</h5>
+
+<div class="form-check mb-2">
+  <input class="form-check-input" type="radio" name="payment" value="COD" checked>
+  <label class="form-check-label">
+    Cash on Delivery (COD)
+  </label>
+</div>
+
+<div class="form-check mb-2">
+  <input class="form-check-input" type="radio" name="payment" value="UPI">
+  <label class="form-check-label">
+    UPI (Google Pay / PhonePe)
+  </label>
+</div>
+
+<div class="form-check mb-4">
+  <input class="form-check-input" type="radio" name="payment" value="Card">
+  <label class="form-check-label">
+    Debit / Credit Card
+  </label>
+</div>
+
+<button class="btn btn-orange w-100 btn-lg">
+Place Order
+</button>
+
+</form>
+
+</div>
+</div>
+
+</div>
+
+</body>
+</html>
