@@ -15,7 +15,7 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg shadow-sm bg-white">
   <div class="container">
-    <a class="navbar-brand fw-bold">Foodie 🍔</a>
+    <a class="navbar-brand fw-bold">Slice & Sauce 🍕</a>
     <div>
       <a href="/menu" class="nav-link d-inline">Menu</a>
       <a href="/cart" class="nav-link d-inline">Cart</a>
@@ -30,74 +30,74 @@
 
 <!-- ORDER SUMMARY -->
 <div class="card mb-4 shadow-sm">
-<div class="card-body">
+  <div class="card-body">
 
-<h5 class="fw-bold mb-3">Order Summary</h5>
+    <h5 class="fw-bold mb-3">Order Summary</h5>
 
-{% for item in cart %}
-<p class="mb-1">
-{{ item.item }} × {{ item.qty }}
-<span class="float-end">
-₹{{ item.price * item.qty }}
-</span>
-</p>
-{% endfor %}
+    {% for item in cart %}
+    <p class="mb-1">
+      {{ item.item }} × {{ item.qty }}
+      <span class="float-end">
+        ₹{{ item.price * item.qty }}
+      </span>
+    </p>
+    {% endfor %}
 
-<hr>
+    <hr>
 
-<h5 class="fw-bold">
-Total
-<span class="float-end">₹{{ total }}</span>
-</h5>
+    <h5 class="fw-bold">
+      Total
+      <span class="float-end">₹{{ total }}</span>
+    </h5>
 
-</div>
+  </div>
 </div>
 
 <!-- ADDRESS + PAYMENT -->
 <div class="card shadow-sm">
-<div class="card-body">
+  <div class="card-body">
 
-<h5 class="fw-bold mb-3">Delivery Address 📍</h5>
+    <h5 class="fw-bold mb-3">Delivery Address 📍</h5>
 
-<form method="POST">
+    <form method="POST">
 
-<textarea name="address"
-class="form-control mb-4"
-rows="4"
-placeholder="Enter your full delivery address"
-required></textarea>
+      <textarea name="address"
+        class="form-control mb-4"
+        rows="4"
+        placeholder="Enter your full delivery address"
+        required></textarea>
 
-<!-- 🔥 PAYMENT OPTIONS (STEP 4) -->
-<h5 class="fw-bold mb-3">Payment Method 💳</h5>
+      <!-- PAYMENT OPTIONS -->
+      <h5 class="fw-bold mb-3">Payment Method 💳</h5>
 
-<div class="form-check mb-2">
-  <input class="form-check-input" type="radio" name="payment" value="COD" checked>
-  <label class="form-check-label">
-    Cash on Delivery (COD)
-  </label>
-</div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="radio" name="payment" value="COD" required>
+        <label class="form-check-label">
+          Cash on Delivery (COD)
+        </label>
+      </div>
 
-<div class="form-check mb-2">
-  <input class="form-check-input" type="radio" name="payment" value="UPI">
-  <label class="form-check-label">
-    UPI (Google Pay / PhonePe)
-  </label>
-</div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="radio" name="payment" value="ONLINE">
+        <label class="form-check-label">
+          UPI (Google Pay / PhonePe)
+        </label>
+      </div>
 
-<div class="form-check mb-4">
-  <input class="form-check-input" type="radio" name="payment" value="Card">
-  <label class="form-check-label">
-    Debit / Credit Card
-  </label>
-</div>
+      <div class="form-check mb-4">
+        <input class="form-check-input" type="radio" name="payment" value="ONLINE">
+        <label class="form-check-label">
+          Debit / Credit Card
+        </label>
+      </div>
 
-<button class="btn btn-orange w-100 btn-lg">
-Place Order
-</button>
+      <button class="btn btn-orange w-100 btn-lg">
+        Continue
+      </button>
 
-</form>
+    </form>
 
-</div>
+  </div>
 </div>
 
 </div>

@@ -8,7 +8,6 @@ app.secret_key = "foodapp_secure_key_2026"
 # ===============================
 # DATABASE CONNECTION
 # ===============================
-
 def get_db():
     return sqlite3.connect("database.db", check_same_thread=False)
 
@@ -16,7 +15,6 @@ def get_db():
 # ===============================
 # CREATE TABLES + AUTO SEED
 # ===============================
-
 def create_tables():
     conn = get_db()
     cur = conn.cursor()
@@ -61,7 +59,7 @@ def create_tables():
     (5,'Sandwich',90,'sandwich.jpg')
     """)
 
-    # ORDERS (🔥 FIXED)
+    # ORDERS ✅ FIXED
     cur.execute("""
     CREATE TABLE IF NOT EXISTS orders(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +83,6 @@ create_tables()
 # ===============================
 # HOME
 # ===============================
-
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -94,7 +91,6 @@ def home():
 # ===============================
 # LOGIN
 # ===============================
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -129,7 +125,6 @@ def login():
 # ===============================
 # DASHBOARD
 # ===============================
-
 @app.route("/dashboard")
 def dashboard():
     if "user" not in session:
@@ -140,7 +135,6 @@ def dashboard():
 # ===============================
 # MENU
 # ===============================
-
 @app.route("/menu")
 def menu():
     if "user" not in session:
@@ -158,7 +152,6 @@ def menu():
 # ===============================
 # ADD TO CART
 # ===============================
-
 @app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():
 
@@ -190,9 +183,8 @@ def add_to_cart():
 
 
 # ===============================
-# CART PAGE
+# CART
 # ===============================
-
 @app.route("/cart")
 def cart():
     if "user" not in session:
@@ -204,7 +196,7 @@ def cart():
 
 
 # ===============================
-# CHECKOUT (STEP 1)
+# CHECKOUT
 # ===============================
 
 @app.route("/checkout", methods=["GET", "POST"])
@@ -223,9 +215,11 @@ def checkout():
         session["address"] = request.form["address"]
         session["payment_mode"] = request.form["payment"]
 
+        # ✅ COD → directly place order
         if session["payment_mode"] == "COD":
             return redirect("/place_order")
 
+        # ✅ ONLINE → go to fake payment page
         return redirect("/payment")
 
     total = sum(i["price"] * i["qty"] for i in cart)
@@ -233,9 +227,8 @@ def checkout():
 
 
 # ===============================
-# PAYMENT PAGE (STEP 2)
+# PAYMENT (FAKE)
 # ===============================
-
 @app.route("/payment", methods=["GET", "POST"])
 def payment():
 
@@ -245,23 +238,22 @@ def payment():
     if request.method == "POST":
         return redirect("/place_order")
 
-    total = sum(i["price"] * i["qty"] for i in session["cart"])
+    total = sum(i["price"] * i["qty"] for i in session.get("cart", []))
     return render_template("payment.html", total=total)
 
 
 # ===============================
-# PLACE ORDER (STEP 3)
+# PLACE ORDER
 # ===============================
-
 @app.route("/place_order")
 def place_order():
 
     if "user" not in session:
         return redirect("/login")
 
-    cart = session["cart"]
-    address = session["address"]
-    payment_mode = session["payment_mode"]
+    cart = session.get("cart", [])
+    address = session.get("address")
+    payment_mode = session.get("payment_mode")
 
     payment_status = "Pending" if payment_mode == "COD" else "Paid"
 
@@ -270,7 +262,10 @@ def place_order():
 
     for item in cart:
         cur.execute("""
-            INSERT INTO orders(username,item,qty,address,payment_mode,payment_status,status)
+            INSERT INTO orders(
+                username,item,qty,address,
+                payment_mode,payment_status,status
+            )
             VALUES(?,?,?,?,?,?,?)
         """, (
             session["user"],
@@ -293,7 +288,6 @@ def place_order():
 # ===============================
 # ORDER HISTORY
 # ===============================
-
 @app.route("/orders")
 def orders():
     if "user" not in session:
@@ -314,7 +308,6 @@ def orders():
 # ===============================
 # ADMIN PANEL
 # ===============================
-
 @app.route("/admin")
 def admin():
 
@@ -352,9 +345,8 @@ def admin():
 
 
 # ===============================
-# UPDATE STATUS (ADMIN)
+# UPDATE STATUS
 # ===============================
-
 @app.route("/update_status", methods=["POST"])
 def update_status():
 
@@ -376,7 +368,6 @@ def update_status():
 # ===============================
 # LOGOUT
 # ===============================
-
 @app.route("/logout")
 def logout():
     session.clear()
@@ -386,6 +377,5 @@ def logout():
 # ===============================
 # RUN
 # ===============================
-
 if __name__ == "__main__":
     app.run(debug=True)
